@@ -9,7 +9,7 @@ import Head from 'next/head'
 import { CMS_NAME } from '../lib/constants'
 import { fetchListings } from '../queries/listings'
 
-export default function Index({ locale }) {
+export default function Index({ locale, listings }) {
   return (
     <>
       <Layout preview={false}>
@@ -19,6 +19,10 @@ export default function Index({ locale }) {
         <Container>
           <Intro />
           Locale: {locale}
+
+          {listings.map((listing) => (
+            <p key={listing.title}>{listing.title}</p>
+          ))}
         </Container>
       </Layout>
     </>
@@ -26,10 +30,13 @@ export default function Index({ locale }) {
 }
 
 export async function getStaticProps({ locale, locales }) {
+  const listings = await fetchListings(locale);
+
   return {
     props: {
       locale,
       locales,
+      listings,
     },
   }
 }
