@@ -23,6 +23,8 @@ export default function Index({ locale, listings }) {
           {listings.map((listing) => (
             <p key={listing.title}>{listing.title}</p>
           ))}
+
+          <p>Some change</p>
         </Container>
       </Layout>
     </>
