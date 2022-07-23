@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import ErrorPage from 'next/error'
@@ -14,40 +15,28 @@ import { CMS_NAME } from '../../lib/constants'
 
 export default function Post({ post, morePosts, preview }) {
   const router = useRouter()
-
-  if (!router.isFallback && !post) {
-    return <ErrorPage statusCode={404} />
-  }
+  const { locales, locale: activeLocale } = router
+  const otherLocales = locales.filter((locale) => locale !== activeLocale)
 
   return (
     <Layout preview={preview}>
       <Container>
         <Header />
-        {router.isFallback ? (
-          <PostTitle>Loading…</PostTitle>
-        ) : (
-          <>
-            <article>
-              <Head>
-                <title>
-                  {post.title} | Next.js Blog Example with {CMS_NAME}
-                </title>
-                <meta property="og:image" content={post.coverImage.url} />
-              </Head>
-              <PostHeader
-                title={post.title}
-                coverImage={post.coverImage}
-                date={post.date}
-                author={post.author}
-              />
-              <PostBody content={post.content} />
-            </article>
-            <SectionSeparator />
-            {morePosts && morePosts.length > 0 && (
-              <MoreStories posts={morePosts} />
-            )}
-          </>
-        )}
+        <div>
+          <p>Locale switcher:</p>
+          <ul>
+            {otherLocales.map((locale) => {
+              const { pathname, query, asPath } = router
+              return (
+                <li key={locale}>
+                  <Link href={{ pathname, query }} as={asPath} locale={locale}>
+                    <a>{locale}</a>
+                  </Link>
+                </li>
+              )
+            })}
+          </ul>
+        </div>
       </Container>
     </Layout>
   )
